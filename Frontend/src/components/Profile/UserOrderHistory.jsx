@@ -82,46 +82,54 @@ const UserOrderHistory = () => {
           <h1>Mode</h1>
         </div>
       </div>
-      {orderHistory.map((items, i) => (
-        <div
-          key={items._id || i} // Ensure unique key for React
-          className="bg-zinc-800 w-full rounded py-2 px-4 flex gap-4 hover:bg-zinc-900 hover:cursor-pointer transition-all duration-300"
+      {orderHistory.map((items, i) => {
+  const book = items.book || {}; // Fallback to an empty object if book is null
+  return (
+    <div
+      key={items._id || i} // Ensure unique key for React
+      className="bg-zinc-800 w-full rounded py-2 px-4 flex gap-4 hover:bg-zinc-900 hover:cursor-pointer transition-all duration-300"
+    >
+      <div className="w-[3%]">
+        <h1 className="text-center">{i + 1}</h1>
+      </div>
+      <div className="w-[22%]">
+        {book._id ? (
+          <Link
+            to={`/view-book-details/${book._id}`}
+            className="hover:text-blue-300"
+          >
+            {book.title}
+          </Link>
+        ) : (
+          <span className="text-red-500">Book info unavailable</span>
+        )}
+      </div>
+      <div className="w-[45%]">
+        <h1>{book.desc ? book.desc.slice(0, 50) : "No description"} ...</h1>
+      </div>
+      <div className="w-[9%]">
+        <h1>&#8377; {book.price || "N/A"}</h1>
+      </div>
+      <div className="w-[16%]">
+        <h1
+          className={`font-semibold ${
+            items.status === "Order placed"
+              ? "text-yellow-500"
+              : items.status === "Canceled"
+              ? "text-red-500"
+              : "text-green-500"
+          }`}
         >
-          <div className="w-[3%]">
-            <h1 className="text-center">{i + 1}</h1>
-          </div>
-          <div className="w-[22%]">
-            <Link
-              to={`/view-book-details/${items.book._id}`}
-              className="hover:text-blue-300"
-            >
-              {items.book.title}
-            </Link>
-          </div>
-          <div className="w-[45%]">
-            <h1>{items.book.desc.slice(0, 50)} ...</h1>
-          </div>
-          <div className="w-[9%]">
-            <h1>&#8377; {items.book.price}</h1>
-          </div>
-          <div className="w-[16%]">
-            <h1
-              className={`font-semibold ${
-                items.status === "Order placed"
-                  ? "text-yellow-500"
-                  : items.status === "Canceled"
-                  ? "text-red-500"
-                  : "text-green-500"
-              }`}
-            >
-              {items.status}
-            </h1>
-          </div>
-          <div className="hidden md:block md:w-[5%]">
-            <h1 className="text-sm text-zinc-400">COD</h1>
-          </div>
-        </div>
-      ))}
+          {items.status}
+        </h1>
+      </div>
+      <div className="hidden md:block md:w-[5%]">
+        <h1 className="text-sm text-zinc-400">COD</h1>
+      </div>
+    </div>
+  );
+})}
+
     </div>
   );
 };
